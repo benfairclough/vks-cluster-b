@@ -3,7 +3,7 @@ kind: Cluster
 #define the cluster
 metadata:
   #user-defined name of the cluster; string
-  name: ENTERCLUSTERNAME
+  name: vks-cluster-b
   #kubernetes namespace for the cluster; string
   namespace: vks-cluster-a
   annotations:
