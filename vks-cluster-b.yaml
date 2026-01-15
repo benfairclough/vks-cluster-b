@@ -66,6 +66,18 @@ spec:
       #persistent storage class for cluster nodes
       - name: storageClass
         value: "home-mgmt-cl01-optimal-datastore-default-policy-raid5"
+      - name: nodePoolVolumes
+        value:
+          - name: containerd
+            capacity:
+              storage: 50Gi
+            mountPath: /var/lib/containerd
+            storageClass: "home-mgmt-cl01-optimal-datastore-default-policy-raid5"
+          - name: kubelet
+            capacity:
+              storage: 50Gi
+            mountPath: /var/lib/kubelet
+            storageClass: "home-mgmt-cl01-optimal-datastore-default-policy-raid5"
       - name: osConfiguration
         value:
           trust:
