@@ -1,4 +1,4 @@
-apiVersion: cluster.x-k8s.io/v1beta1
+apiVersion: cluster.x-k8s.io/v1beta2
 kind: Cluster
 #define the cluster
 metadata:
@@ -16,12 +16,12 @@ spec:
     services:
       #ranges of network addresses; string array
       #CAUTION: must not overlap with Supervisor
-      cidrBlocks: ["10.97.0.0/16"]
+      cidrBlocks: ["10.96.0.0/16"]
     #network ranges from which Pod networks are allocated
     pods:
       #ranges of network addresses; string array
       #CAUTION: must not overlap with Supervisor
-      cidrBlocks: ["192.168.128.0/20"]
+      cidrBlocks: ["192.168.0.0/20"]
     #domain name for services; string
     serviceDomain: "cluster.local"
   #specify the topology for the cluster
@@ -58,6 +58,19 @@ spec:
             overrides:
               - name: vmClass
                 value: best-effort-small
+             # 1. Correct Variable Name is 'volumes'
+              - name: volumes
+                value:
+                  - name: containerd
+                    # 2. Capacity must be a string, not a map
+                    capacity: "50Gi"
+                    mountPath: /var/lib/containerd
+                    storageClass: "home-mgmt-cl01-optimal-datastore-default-policy-raid5"
+                  - name: kubelet
+                    capacity: "50Gi"
+                    mountPath: /var/lib/kubelet
+                    storageClass: "home-mgmt-cl01-optimal-datastore-default-policy-raid5"
+
     #customize the cluster
     variables:
       #virtual machine class type and size for cluster nodes
@@ -66,18 +79,6 @@ spec:
       #persistent storage class for cluster nodes
       - name: storageClass
         value: "home-mgmt-cl01-optimal-datastore-default-policy-raid5"
-      - name: nodePoolVolumes
-        value:
-          - name: containerd
-            capacity:
-              storage: 50Gi
-            mountPath: /var/lib/containerd
-            storageClass: "home-mgmt-cl01-optimal-datastore-default-policy-raid5"
-          - name: kubelet
-            capacity:
-              storage: 50Gi
-            mountPath: /var/lib/kubelet
-            storageClass: "home-mgmt-cl01-optimal-datastore-default-policy-raid5"
       - name: osConfiguration
         value:
           trust:
